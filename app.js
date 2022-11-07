@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const dotenv = require('dotenv');
+
+const helmet = require('helmet');
 const rateLimit = require('./middleware/rate-limit');
+const dotenv = require('dotenv'); // use dotenv to prevent access control bypass
 
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
@@ -19,6 +21,9 @@ mongoose.connect('mongodb+srv://' + process.env.MONGO_LOG + ':' + process.env.MO
 .catch(() => console.log('MongoDB connexion has failed !'));
 
 app.use(express.json());
+helmet({
+    crossOriginResourcePolicy: false,
+})
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
